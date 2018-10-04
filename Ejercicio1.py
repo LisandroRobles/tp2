@@ -38,7 +38,7 @@ def testbench():
 #    plt.grid()
         
     #Calculo del espectro de la ventana rectangular (kernel de Dirichlet)
-    (f,Wr) = SA.PSD(wr,db = True)
+    (f,Wr) = SA.module(wr,db = True)
     
     plt.figure()
     plt.title('Espectro de modulo de ventana rectangular (kernel de Dirichlet), N = ' + str(N1))
@@ -59,7 +59,7 @@ def testbench():
 #    plt.grid()
         
     #Calculo del espectro de la ventana barlett
-    (f,Wt) = SA.PSD(wt,db = True)
+    (f,Wt) = SA.module(wt,db = True)
     
     plt.figure()
     plt.title('Espectro de modulo de ventana bartlett, N = ' + str(N1))
@@ -80,7 +80,7 @@ def testbench():
 #    plt.grid()
         
     #Calculo del espectro de la ventana de hann
-    (f,Whn) = SA.PSD(whn,db = True)
+    (f,Whn) = SA.module(whn,db = True)
     
     plt.figure()
     plt.title('Espectro de modulo de ventana de hann, N = ' + str(N1))
@@ -101,7 +101,7 @@ def testbench():
 #    plt.grid()
         
     #Calculo del espectro de la ventana de hann
-    (f,Wb) = SA.PSD(wb,db = True)
+    (f,Wb) = SA.module(wb,db = True)
     
     plt.figure()
     plt.title('Espectro de modulo de ventana de blackman, N = ' + str(N1))
@@ -122,7 +122,7 @@ def testbench():
 #    plt.grid()
         
     #Calculo del espectro de la ventana float-top
-    (f,Wft) = SA.PSD(wft,db = True)
+    (f,Wft) = SA.module(wft,db = True)
     
     plt.figure()
     plt.title('Espectro de modulo de ventana flat-top, N = ' + str(N1))

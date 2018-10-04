@@ -29,9 +29,9 @@ class spectrum_analyzer:
         self.set_algorithm(algorithm)
         
 
-    def module(self,x,plot = False):
+    def module(self,x,plot = False,db = False):
         
-        X = self.transform(x)/(self.N)
+        X = self.transform(x)/(np.size(x,0))
         
         X_mod = np.abs(X)
         
@@ -46,6 +46,9 @@ class spectrum_analyzer:
         X_mod_aux = X_mod[self.fmin:(self.fmax + 1),:]
         aux = np.array([2*Xi if (Xi != X_mod_aux[self.fmin] and Xi != X_mod_aux[self.fmax]) else Xi for Xi in X_mod_aux],dtype = float)
         X_mod_aux = aux
+
+        if db is True:
+            X_mod_aux = 20*np.log10(X_mod_aux + np.finfo(float).eps) #Unidad: dBW
                 
         #Presentacion frecuencia de los resultados de modulo        
         if plot is True:
