@@ -21,9 +21,12 @@ class signal_generator:
         self.N = N
         #Resolucion espectral
         self.df = fs/N
+        #Vector de muestras
+        self.n = np.linspace(0,self.N-1,self.N)
         #Vector temporal
         self.t = np.linspace(0,(self.N-1)*self.Ts,self.N)
-            
+
+        
     def zero_padding(self,x,Mj,plot = False):
         
         x = np.pad(x,((0,Mj),(0,0)),'constant')
@@ -43,11 +46,11 @@ class signal_generator:
         
         return (t,x)
     
-    def sinewave(self,Ao,fo,po,plot = False):
+    def sinewave(self,Ao,fo,po,plot = False,freq = 'bin'):
                 
         #Genero una matriz vacia en la que voy a ir cargando todos los resultados.
         x = np.array([],dtype='float').reshape(self.N,0)
-        
+                
         #Transformo los parametros en tuplas. Al pasarle a esta funcion varios valo
         #res para cada uno de los parametros de la forma Ao = (Ao1,Ao2) seran inter
         #pretados como tuplas (parametro iterable) por la funcion zip. Pero al pasa
@@ -76,15 +79,31 @@ class signal_generator:
         #En cada ciclo de la iteracion se va obteniendo de las tuplas Ao,fo y po el
         #parametro necesario para generar la senoidal correspondiente.
         for amp_actual,frec_actual,fase_actual in zip(Ao,fo,po):
-            
+
+            if freq is 'bin':
+                #Pulsacion angular actual(wo = 2*pi*fo).        
+                puls_actual = 2*np.pi*frec_actual*self.df
+                t = self.t
+            elif freq is 'frequency':
+                puls_actual = 2*np.pi*frec_actual
+                t = self.t
+            elif freq is 'normalized_frequency':
+                puls_actual = frec_actual
+                t = self.n
+            elif freq is 'normalized':
+                puls_actual = 2*np.pi*frec_actual
+                t = self.n
+            else:
+                #Pulsacion angular actual(wo = 2*pi*fo).        
+                puls_actual = 2*np.pi*frec_actual*self.df
+                t = self.t
+                
             #paso la fase actual a radianes
             fase_actual = np.deg2rad(fase_actual)
             
-            #Pulsacion angular actual(wo = 2*pi*fo).        
-            puls_actual = 2*np.pi*frec_actual*self.df
             
             #Calcula la senoidal actual.
-            senoidal_actual = amp_actual*np.sin((puls_actual*self.t) + fase_actual);
+            senoidal_actual = amp_actual*np.sin((puls_actual*t) + fase_actual);
                         
             #Agrego la senoidal actual a la matriz que contendra la senoidal
             #actual.
