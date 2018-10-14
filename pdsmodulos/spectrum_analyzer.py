@@ -25,11 +25,17 @@ class spectrum_analyzer:
         self.fmin = int(0)
         #Vector de frecuencias
         self.f = fftpack.fftfreq(self.N,1/(self.fs))
+        #Vector de phi
+        self.phi = (self.f)*((2*np.pi)/self.fs)
+        #Vector de phi normalizado
+        self.phi_norm = self.phi/(2*np.pi)
+        #Vector de bines 
+        self.bin = self.phi_norm*self.N
         #Metodo de transformacion
         self.set_algorithm(algorithm)
         
 
-    def module(self,x,plot = False,db = False):
+    def module(self,x,plot = False,db = False,xaxis = 'frequency'):
         
         X = self.transform(x)/(np.size(x,0))
         
@@ -38,8 +44,18 @@ class spectrum_analyzer:
         #Se genera una vector auxiliar de f para solo plotear banda digital
         #Es decir de 0 a fs/2
         
-        f_aux = np.abs(self.f[self.fmin:(self.fmax + 1)])
-        f_aux = np.reshape(f_aux,(np.size(f_aux),1))
+        if xaxis is 'phi_norm':
+            f = np.abs(self.phi_norm[self.fmin:(self.fmax + 1)])
+        elif xaxis is 'phi':
+            f = np.abs(self.phi[self.fmin:(self.fmax + 1)])
+        elif xaxis is 'bin':
+            f = np.abs(self.bin[self.fmin:(self.fmax + 1)])
+        elif xaxis is 'frequency':
+            f = np.abs(self.f[self.fmin:(self.fmax + 1)])
+        else:
+            f = np.abs(self.f[self.fmin:(self.fmax + 1)])
+
+        f = np.reshape(f,(np.size(f),1))
         
         #Se genera un vector auxiliar de modulo para plotear solo banda digital
         
@@ -55,14 +71,14 @@ class spectrum_analyzer:
             plt.figure()
             plt.title('Espectro de modulo')
             
-            plt.stem(f_aux,X_mod_aux)
+            plt.stem(f,X_mod_aux)
             plt.axis('tight')
             plt.xlabel('f[Hz]')
             plt.ylabel('|X(f)|[V]')
             plt.grid()
             plt.show()
         
-        return(f_aux,X_mod_aux)        
+        return(f,X_mod_aux)        
 
     def module_phase(self,x):
         
